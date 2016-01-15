@@ -24,7 +24,7 @@ class WindowGame:
         self.is_run_loop = True
 
         # Scène principale
-        self.scene = Scene()
+        self.scene = None
 
 
         # Initialisation des paramètres de la fenêtre
@@ -75,7 +75,7 @@ class Scene:
     """
 
     def __init__(self):
-        self.sprites = [Sprite(pygame.Rect(0, 0, 100, 100))]
+        self.sprites = []
 
 
 
