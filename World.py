@@ -147,7 +147,7 @@ class Scene:
         :return:
         """
 
-        print("Mous down scene")
+
 
         sprite = self.sprite_for_coordinate(coordinate_x, coordinate_y)
         if sprite is not None:
@@ -235,7 +235,6 @@ class Sprite:
         """
 
         self.rect = rect
-        self.image = pygame.image.load("perso.png").convert_alpha()
         self.window = window
 
 
