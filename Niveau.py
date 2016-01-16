@@ -7,6 +7,7 @@ import pygame
 from pygame.locals import *
 import random
 
+SIZE_BALL = 20
 #-----------------------------------------------------------------------------------------------------------------------
 #                                                           Niveau 1
 #-----------------------------------------------------------------------------------------------------------------------
@@ -143,9 +144,9 @@ class SceneLevel2(Scene):
 
             #Si la ball doit être envoyé dans haut puis descendre
             if self.show_ball_up:
-                self.sprites.append(TopBall(pygame.Rect(random.randint(10, RECT_WINDOW.width - 10), 0, 10, 10), self.window))
+                self.sprites.append(TopBall(pygame.Rect(random.randint(10, RECT_WINDOW.width - 10), 0, SIZE_BALL, SIZE_BALL), self.window))
             else:
-                self.sprites.append(BottomBall(pygame.Rect(random.randint(10, RECT_WINDOW.width - 10), RECT_WINDOW.height - 10, 10, 10), self.window))
+                self.sprites.append(BottomBall(pygame.Rect(random.randint(10, RECT_WINDOW.width - 10), RECT_WINDOW.height - 10, SIZE_BALL, SIZE_BALL), self.window))
             self.show_ball_up = not self.show_ball_up
 
 
@@ -185,7 +186,7 @@ class SceneLevel2(Scene):
 
                 elif isinstance(sprite, BottomBall):
                     #Détermine quand on perd pour la ball qui démarre en bas
-                    if sprite.rect.y - sprite.rect.width <= RECT_WINDOW.height / 2:
+                    if sprite.rect.y <= RECT_WINDOW.height / 2:
                         self.sprites.remove(sprite)
 
                         #-------------------
@@ -229,7 +230,8 @@ class Ball(Sprite):
 
 
     def update_sprite(self):
-        pygame.draw.circle(self.window, (46, 204, 113), (self.rect.x, self.rect.y), self.rect.width)
+        pygame.draw.circle(self.window, (46, 204, 113), self.rect.center, int(self.rect.width / 2))
+
 
 
 class TopBall(Ball):
