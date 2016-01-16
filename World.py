@@ -23,13 +23,14 @@ class WindowGame:
         # Permet de savoir si la fenêtre doit être fermée
         self.is_run_loop = True
 
-        # Scène principale
-        self.scene = None
+
 
 
         # Initialisation des paramètres de la fenêtre
-        self.window =  pygame.display.set_mode((640, 480))
-        pygame.display.set_caption("New Ball")
+        self.window = pygame.display.set_mode((640, 480))
+
+         # Scène principale
+        self.scene = None
 
 
     def run_Loop(self):
@@ -39,20 +40,24 @@ class WindowGame:
         """
 
         while self.is_run_loop:
-
+            #Event
             for event in pygame.event.get():
                 if event.type == QUIT:
                     self.is_run_loop = False
 
                 if self.scene is not None:
-
+                    #Il se peut que la position de la souris soit null, la souris n'est pas sur la fenêtre
+                    try:
+                        self.scene.mouse_dragg(event.pos[0], event.pos[1])
+                    except AttributeError:
+                        pass
                     #Clique sur le boutton
                     if event.type == MOUSEBUTTONDOWN:
                         #Clic droit
-                        if event.button == 1:
+                        if event.button == 3:
                             self.scene.mouse_down_right(event.pos[0], event.pos[1])
                         #Clic gauche
-                        if event.button == 3:
+                        if event.button == 1:
                             self.scene.mouse_down_left(event.pos[0], event.pos[1])
                         #Scroll en bas
                         if event.button == 5:
@@ -64,9 +69,15 @@ class WindowGame:
                     if event.type == KEYDOWN:
                         self.scene.key_down(event.key)
 
-
+            #Mis à jour de la scène et des sprites de la scène
             if self.scene is not None:
                 self.scene.update_screen()
+            #Met à jour l'écran
+            pygame.display.flip()
+
+
+
+
 
 
 class Scene:
@@ -74,7 +85,16 @@ class Scene:
     Répresentation d'une scène
     """
 
-    def __init__(self):
+    def __init__(self, window):
+        """
+        Initialiseur de la scène
+
+        :param window: Fenêtre principale
+        :return:
+        """
+
+        self.window = window
+
         self.sprites = []
 
 
@@ -85,7 +105,22 @@ class Scene:
         :return:
         """
 
-        pass
+        for sprite in self.sprites:
+            sprite.update_sprite()
+
+    def mouse_dragg(self, coordinate_x, coordinate_y):
+        """
+        Est appelée à chaque fois update du screen pour savoir les coordonnées de la souris
+
+
+        :param coordinate_x: Coordonnée x de la souris sur la fenêtre
+        :param coordinate_y: Coordonnée y de la souris sur la fenêtre
+        :return:
+        """
+
+        sprite = self.sprite_for_coordinate(coordinate_x, coordinate_y)
+        if sprite is not None:
+            sprite.mouse_dragg(coordinate_x, coordinate_y)
 
     def mouse_down_right(self, coordinate_x, coordinate_y):
         """
@@ -111,6 +146,8 @@ class Scene:
         :param coordinate_y: Coordonnée y de la souris sur la fenêtre
         :return:
         """
+
+        print("Mous down scene")
 
         sprite = self.sprite_for_coordinate(coordinate_x, coordinate_y)
         if sprite is not None:
@@ -188,15 +225,29 @@ class Sprite:
     Répresentation d'un objet comme une balle ou un ennemi
     """
 
-    def __init__(self, rect):
+    def __init__(self, rect, window):
         """
         Initaliseur
 
         :param rect: Rectangle (pygame.Rect)
+        :param window: Fenêtre principale
         :return:
         """
 
         self.rect = rect
+        self.image = pygame.image.load("perso.png").convert_alpha()
+        self.window = window
+
+
+
+    def update_sprite(self):
+        """
+        Si on doit mettre à jour son sprite
+        Ex : Le dessin d'une balle
+        :return:
+
+        """
+        self.window.blit(self.image, (1, 1))
 
 
     def mouse_down_right(self, coordinate_x, coordinate_y):
@@ -247,6 +298,15 @@ class Sprite:
         pass
 
 
+    def mouse_dragg(self, coordinate_x, coordinate_y):
+        """
+        Si la souris passe dans le sprite, alors la fonction est appelée
+
+        :param coordinate_x:  Coordonnée x de la souris sur la fenêtre
+        :param coordinate_y:  Coordonnée y de la souris sur la fenêtre
+        :return:
+        """
+        pass
 
     def key_down(self, key_code):
         """
