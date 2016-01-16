@@ -37,7 +37,7 @@ class SceneLevel1(Scene):
 
         #Difficulté du niveau 1
         #Elle représente l'avancement des balles
-        self.difficulties = 10
+        self.difficulties = 1
 
         #Cache la souris
         pygame.mouse.set_visible(False)
@@ -85,15 +85,9 @@ class SceneLevel1(Scene):
                         self.sprites.remove(sprite)
                     else:
                         #On perd
+                        print("Je perds une 1 ball")
+                        self.sprites.remove(sprite)
                         pass
-
-
-
-
-
-
-
-
 
 
 
