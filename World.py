@@ -5,6 +5,7 @@ Fichier contenant le monde ainsi.
 import pygame
 from pygame.locals import *
 
+RECT_WINDOW = pygame.Rect(0, 0, 550, 480)
 
 class WindowGame:
     """
@@ -27,7 +28,7 @@ class WindowGame:
 
 
         # Initialisation des paramètres de la fenêtre
-        self.window = pygame.display.set_mode((640, 480))
+        self.window = pygame.display.set_mode((RECT_WINDOW.width, RECT_WINDOW.height))
 
          # Scène principale
         self.scene = None
@@ -69,6 +70,7 @@ class WindowGame:
                     if event.type == KEYDOWN:
                         self.scene.key_down(event.key)
 
+            pygame.draw.rect(self.window, (255, 255, 255), pygame.Rect(0, 0, RECT_WINDOW.width, RECT_WINDOW.height))
             #Mis à jour de la scène et des sprites de la scène
             if self.scene is not None:
                 self.scene.update_screen()
