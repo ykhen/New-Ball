@@ -3,8 +3,8 @@ Fichier main.py
 Programme principale
 """
 
-import World
+import Game
 
 if __name__ == "__main__":
-    window = World.WindowGame()
+    window = Game.MainWindow()
     window.run_Loop()
