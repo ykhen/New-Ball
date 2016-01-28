@@ -7,7 +7,7 @@ import pygame
 from pygame.locals import *
 import random
 
-SIZE_BALL = 20
+SIZE_BALL = 20 
 #-----------------------------------------------------------------------------------------------------------------------
 #                                                           Niveau 1
 #-----------------------------------------------------------------------------------------------------------------------
@@ -50,10 +50,12 @@ class SceneLevel1(Scene):
         #Appèle de la super class
         Scene.update_screen(self)
 
+        pygame.time.delay(8)
+
         now_time = pygame.time.get_ticks()
         if now_time - self.last_time_show_balle >= self.show_ball_time:
             self.last_time_show_balle = now_time
-            self.sprites.append(Ball(pygame.Rect(random.randint(10, RECT_WINDOW.width - 10), 0, 10, 10), self.window))
+            self.sprites.append(Ball(pygame.Rect(random.randint(SIZE_BALL, RECT_WINDOW.width - SIZE_BALL), 0, SIZE_BALL, SIZE_BALL), self.window))
 
         if now_time - self.last_time_advance_difficult >= 10000:
             self.last_time_advance_difficult = now_time
@@ -124,6 +126,8 @@ class SceneLevel2(Scene):
         #Boolean qui permet de savoir si on affiche la ball en haut ou en bas
         self.show_ball_up = True
 
+        
+
 
 
 
@@ -137,6 +141,8 @@ class SceneLevel2(Scene):
         #Appèle de la super class
         Scene.update_screen(self)
 
+        pygame.time.delay(8)
+
         now_time = pygame.time.get_ticks()
         #Ajoute la ball
         if now_time - self.last_time_show_balle >= self.show_ball_time:
@@ -144,9 +150,9 @@ class SceneLevel2(Scene):
 
             #Si la ball doit être envoyé dans haut puis descendre
             if self.show_ball_up:
-                self.sprites.append(TopBall(pygame.Rect(random.randint(10, RECT_WINDOW.width - 10), 0, SIZE_BALL, SIZE_BALL), self.window))
+                self.sprites.append(TopBall(pygame.Rect(random.randint(10, RECT_WINDOW.width - SIZE_BALL), 0, SIZE_BALL, SIZE_BALL), self.window))
             else:
-                self.sprites.append(BottomBall(pygame.Rect(random.randint(10, RECT_WINDOW.width - 10), RECT_WINDOW.height - 10, SIZE_BALL, SIZE_BALL), self.window))
+                self.sprites.append(BottomBall(pygame.Rect(random.randint(10, RECT_WINDOW.width - SIZE_BALL), RECT_WINDOW.height - 10, SIZE_BALL, SIZE_BALL), self.window))
             self.show_ball_up = not self.show_ball_up
 
 

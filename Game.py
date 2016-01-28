@@ -3,7 +3,7 @@ Fichier contenant le jeu
 """
 
 from World import WindowGame, Sprite, Scene, RECT_WINDOW
-from Niveau import SceneLevel1
+from Niveau import SceneLevel2, SceneLevel1
 
 
 class MainWindow(WindowGame):
@@ -12,6 +12,6 @@ class MainWindow(WindowGame):
     """
     def __init__(self):
         WindowGame.__init__(self)
-        self.scene = SceneLevel1(self.window)
+        self.scene = SceneLevel2(self.window)
 
 
