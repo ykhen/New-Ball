@@ -8,6 +8,11 @@ from pygame.locals import *
 import random
 
 SIZE_BALL = 20
+BAR_COLOR = (207, 0, 15)
+BACKGROUND_COLOR = (44, 62, 80)
+LINE_COLOR = BAR_COLOR
+LABEL_SCORE_COLOR = LINE_COLOR
+BALL_COLORS = ((255, 255, 255), (154, 18, 179), (249, 191, 59), (148, 62, 84), (0, 150, 0))
 #-----------------------------------------------------------------------------------------------------------------------
 #                                                           Niveau 1
 #-----------------------------------------------------------------------------------------------------------------------
@@ -44,7 +49,8 @@ class SceneLevel1(Scene):
     def mouse_dragg(self, coordinate_x, coordinate_y):
         #Modifie la bar
         if coordinate_x >= 1 and coordinate_x <= RECT_WINDOW.width - self.bar.rect.width:
-            self.sprites[0].rect.x = coordinate_x
+            self.sprites[0].rect.x = 0
+            print("Je baéise")
 
 
     def update_screen(self):
@@ -122,7 +128,7 @@ class SceneLevel2(Scene):
         self.difficulties = 1
 
         #Cache la souris
-        pygame.mouse.set_visible(False)
+        #pygame.mouse.set_visible(False)
 
         #Boolean qui permet de savoir si on affiche la ball en haut ou en bas
         self.show_ball_up = True
@@ -140,13 +146,15 @@ class SceneLevel2(Scene):
 
     def mouse_dragg(self, coordinate_x, coordinate_y):
         #Modifie la bar
-        if coordinate_x >= 1 and coordinate_x <= RECT_WINDOW.width - self.bar.rect.width:
-            self.sprites[0].rect.x = coordinate_x
+
+        self.bar.rect.x = coordinate_x - self.bar.rect.width / 2
 
 
     def update_screen(self):
+        pygame.draw.rect(self.window, BACKGROUND_COLOR, pygame.Rect(0, 0, RECT_WINDOW.width, RECT_WINDOW.height))
         #Appèle de la super class
         Scene.update_screen(self)
+
 
         pygame.time.delay(8)
 
@@ -225,7 +233,9 @@ class SceneLevel2(Scene):
                     self.sprites.remove(sprite)
 
         #Affiche le score
-        self.window.blit(self.font_scores.render("{}".format(self.scores), 1, (46, 204, 113)), (20, 20))
+        self.window.blit(self.font_scores.render("{}".format(self.scores), 1, LABEL_SCORE_COLOR), (20, 20))
+
+
 
 
 
@@ -237,7 +247,7 @@ class Bar(Sprite):
 
 
     def update_sprite(self):
-        pygame.draw.rect(self.window, (46, 204, 113), self.rect)
+        pygame.draw.rect(self.window, BAR_COLOR, self.rect)
 
 
 class Ball(Sprite):
@@ -248,12 +258,14 @@ class Ball(Sprite):
     def __init__(self, rect, window):
         Sprite.__init__(self, rect, window)
 
+        self.ball_color = random.choice(BALL_COLORS)
+
         #Permet de savoir si la balle va en haut ou en bas
         self.move_up = False
 
 
     def update_sprite(self):
-        pygame.draw.circle(self.window, (46, 204, 113), self.rect.center, int(self.rect.width / 2))
+        pygame.draw.circle(self.window, self.ball_color, self.rect.center, int(self.rect.width / 2))
 
 
 
@@ -276,5 +288,5 @@ class LineLimite(Sprite):
     """Class délimitant les 2 zones pour le niveau 2"""
 
     def update_sprite(self):
-        pygame.draw.rect(self.window, (46, 204, 113), self.rect)
+        pygame.draw.rect(self.window, LINE_COLOR, self.rect)
 
