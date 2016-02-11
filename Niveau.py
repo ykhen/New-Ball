@@ -7,7 +7,7 @@ import pygame
 from pygame.locals import *
 import random
 
-SIZE_BALL = 20 
+SIZE_BALL = 20
 #-----------------------------------------------------------------------------------------------------------------------
 #                                                           Niveau 1
 #-----------------------------------------------------------------------------------------------------------------------
@@ -25,6 +25,7 @@ class SceneLevel1(Scene):
 
         #Timer pour les apparitions des balles
         self.last_time_show_balle = pygame.time.get_ticks()
+
 
         #Les balles apparaissent toutes les self.show_ball_time en milliseconde
         self.show_ball_time = 1000
@@ -126,7 +127,13 @@ class SceneLevel2(Scene):
         #Boolean qui permet de savoir si on affiche la ball en haut ou en bas
         self.show_ball_up = True
 
-        
+        #Scores
+        self.scores = 0
+
+        #Police de caractère du label scores
+        self.font_scores = pygame.font.SysFont("Colibri", 50)
+
+
 
 
 
@@ -173,6 +180,7 @@ class SceneLevel2(Scene):
                 #Collision avec la bar
                 if self.bar.rect.colliderect(sprite.rect):
                     sprite.move_up = not sprite.move_up
+                    self.scores += 1
 
 
                 #Si la class est une instance d'une ball qui part vers le haut
@@ -180,6 +188,9 @@ class SceneLevel2(Scene):
                     #Détermine quand on perd pour la ball qui démarre en haut
                     if sprite.rect.y + sprite.rect.width >= RECT_WINDOW.height / 2:
                         self.sprites.remove(sprite)
+                        self.scores = 0
+                        self.difficulties = 1
+                        self.show_ball_time = 1000
 
                         #-------------------
                         #      Game Over
@@ -194,6 +205,9 @@ class SceneLevel2(Scene):
                     #Détermine quand on perd pour la ball qui démarre en bas
                     if sprite.rect.y <= RECT_WINDOW.height / 2:
                         self.sprites.remove(sprite)
+                        self.scores = 0
+                        self.difficulties = 1
+                        self.show_ball_time = 1000
 
                         #-------------------
                         #      Game Over
@@ -209,6 +223,9 @@ class SceneLevel2(Scene):
                 if not sprite.rect.colliderect(RECT_WINDOW):
                     #La ball sort de l'écran
                     self.sprites.remove(sprite)
+
+        #Affiche le score
+        self.window.blit(self.font_scores.render("{}".format(self.scores), 1, (46, 204, 113)), (20, 20))
 
 
 
@@ -260,3 +277,4 @@ class LineLimite(Sprite):
 
     def update_sprite(self):
         pygame.draw.rect(self.window, (46, 204, 113), self.rect)
+

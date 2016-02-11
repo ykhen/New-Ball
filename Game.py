@@ -3,7 +3,7 @@ Fichier contenant le jeu
 """
 
 from World import WindowGame, Sprite, Scene, RECT_WINDOW
-from Niveau import SceneLevel2, SceneLevel1
+from Niveau import SceneLevel2
 
 
 class MainWindow(WindowGame):
