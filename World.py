@@ -120,9 +120,11 @@ class Scene:
         :return:
         """
 
+
         sprite = self.sprite_for_coordinate(coordinate_x, coordinate_y)
         if sprite is not None:
             sprite.mouse_dragg(coordinate_x, coordinate_y)
+
 
     def mouse_down_right(self, coordinate_x, coordinate_y):
         """
@@ -239,6 +241,8 @@ class Sprite:
         self.rect = rect
         self.window = window
 
+        self.mouse_is_in_sprite = False
+
 
 
     def update_sprite(self):
@@ -317,4 +321,17 @@ class Sprite:
         :return:
         """
 
+        pass
+
+    def mouse_entered(self):
+        """
+        Quand la souris entre dans le sprite
+        :return:
+        """
+        pass
+    def mouse_exited(self):
+        """
+        Quand la souris sort du sprite
+        :return:
+        """
         pass

@@ -12,7 +12,7 @@ BAR_COLOR = (207, 0, 15)
 BACKGROUND_COLOR = (44, 62, 80)
 LINE_COLOR = BAR_COLOR
 LABEL_SCORE_COLOR = LINE_COLOR
-BALL_COLORS = ((255, 255, 255), (154, 18, 179), (249, 191, 59), (148, 62, 84), (0, 150, 0))
+BALL_COLORS = ((191, 191, 191), (154, 18, 179), (249, 191, 59), (148, 62, 84), (0, 150, 0))
 #-----------------------------------------------------------------------------------------------------------------------
 #                                                           Niveau 1
 #-----------------------------------------------------------------------------------------------------------------------
@@ -42,15 +42,14 @@ class SceneLevel1(Scene):
         #Elle représente l'avancement des balles
         self.difficulties = 1
 
-        #Cache la souris
-        pygame.mouse.set_visible(False)
+
 
 
     def mouse_dragg(self, coordinate_x, coordinate_y):
         #Modifie la bar
-        if coordinate_x >= 1 and coordinate_x <= RECT_WINDOW.width - self.bar.rect.width:
-            self.sprites[0].rect.x = 0
-            print("Je baéise")
+        self.bar.rect.x = coordinate_x - self.bar.rect.width / 2
+
+
 
 
     def update_screen(self):
