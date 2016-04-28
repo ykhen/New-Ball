@@ -13,6 +13,7 @@ BACKGROUND_COLOR = (44, 62, 80)
 LINE_COLOR = BAR_COLOR
 LABEL_SCORE_COLOR = LINE_COLOR
 BALL_COLORS = ((191, 191, 191), (154, 18, 179), (249, 191, 59), (148, 62, 84), (0, 150, 0))
+BACKGROUND_COLOR_GAME_OVER  = (150, 40, 27)
 #-----------------------------------------------------------------------------------------------------------------------
 #                                                           Niveau 1
 #-----------------------------------------------------------------------------------------------------------------------
@@ -42,15 +43,21 @@ class SceneLevel1(Scene):
         #Elle représente l'avancement des balles
         self.difficulties = 1
 
+        #Font pour le label qui affiche les scores
+        self.font_scores = pygame.font.SysFont("Colibri", 50)
+
+        #Score
+        self.scores = 0
+
+        #Call back qui appelle le game over
+        self.call_back_game_over = None
+
 
 
 
     def mouse_dragg(self, coordinate_x, coordinate_y):
         #Modifie la bar
         self.bar.rect.x = coordinate_x - self.bar.rect.width / 2
-
-
-
 
     def update_screen(self):
         #Appèle de la super class
@@ -79,6 +86,7 @@ class SceneLevel1(Scene):
                 #Collision avec la bar
                 if self.bar.rect.colliderect(sprite.rect):
                     sprite.move_up = True
+                    self.scores += 1
                 if sprite.move_up:
                     sprite.rect.y -= self.difficulties + 2
                 else:
@@ -90,9 +98,33 @@ class SceneLevel1(Scene):
                         self.sprites.remove(sprite)
                     else:
                         #On perd
-                        print("Je perds une 1 ball")
+                        if self.call_back_game_over is not None:
+                            self.call_back_game_over()
+
                         self.sprites.remove(sprite)
                         pass
+        #Affiche le score
+        self.window.blit(self.font_scores.render("{}".format(self.scores), 1, LABEL_SCORE_COLOR), (20, 20))
+
+
+    def reset(self):
+        """
+        Remet à zero le niveau
+        :return:
+        """
+        #Met le score à zero puis les balles
+        self.scores = 0
+        new_sprites = []
+        for s in self.sprites:
+            if not isinstance(s, Ball):
+                new_sprites.append(s)
+
+        self.sprites = new_sprites
+
+        #Remet les difficulté à zero
+        self.show_ball_time = 1000
+        self.difficulties = 1
+
 
 
 
@@ -288,4 +320,57 @@ class LineLimite(Sprite):
 
     def update_sprite(self):
         pygame.draw.rect(self.window, LINE_COLOR, self.rect)
+
+
+
+class GameOver(Scene):
+    """
+    Game Over
+    """
+    def __init__(self,  window):
+        Scene.__init__(self, window)
+        #Font pour le label
+        self.font_game_over = pygame.font.SysFont("Colibri", 50)
+
+        #Font pour le label d'informationn
+        self.font_info = pygame.font.SysFont("Colibri", 25)
+
+        #Font pour le label du button de retour
+        self.font_back_button = pygame.font.SysFont("Colibri", 25)
+
+        #Pour sortir du game over
+        self.call_back = None
+
+        #Call_back pour retourner au menu
+        self.call_back_menu = None
+
+        #Rect pour le button
+        self.rect_button =  pygame.Rect(20, 20, 75, 30)
+        self.score = 0
+
+    def update_screen(self):
+        pygame.draw.rect(self.window, BACKGROUND_COLOR_GAME_OVER, RECT_WINDOW)
+        pygame.draw.rect(self.window, (255, 255, 255), self.rect_button)
+        surface_score = self.font_game_over.render("Score : {}".format(self.score), 1, (255, 255, 255))
+        surface_game_over = self.font_game_over.render("Game Over", 1, (255, 255, 255))
+        surface_info = self.font_info.render("Cliquer pour recommencer", 1, (255, 255, 255))
+        surface_back_button = self.font_back_button.render("Retour", 1, (BACKGROUND_COLOR_GAME_OVER))
+
+
+        self.window.blit(surface_game_over, pygame.Rect(RECT_WINDOW.width / 2 - surface_game_over.get_width() / 2, RECT_WINDOW.height / 2 - surface_game_over.get_height() / 2, surface_game_over.get_width(), surface_game_over.get_height()))
+        self.window.blit(surface_info, pygame.Rect((RECT_WINDOW.width / 2 - surface_info.get_width() / 2), (RECT_WINDOW.height / 2 - surface_info.get_height() / 2) + surface_game_over.get_height() + 10, surface_info.get_width(), surface_info.get_height()))
+        self.window.blit(surface_score, pygame.Rect(RECT_WINDOW.width / 2 - surface_score.get_width() / 2, (RECT_WINDOW.height / 2 - surface_score.get_height() / 2) - (surface_game_over.get_height() + surface_score.get_height()) - 10 , surface_score.get_width(), surface_score.get_height()))
+        self.window.blit(surface_back_button, pygame.Rect(30, 35 - surface_back_button.get_height() / 2, surface_back_button.get_width(), surface_back_button.get_height()))
+
+    def mouse_down_left(self, coordinate_x, coordinate_y):
+        if coordinate_x >= self.rect_button.x and self.rect_button.x + self.rect_button.width > coordinate_x and coordinate_y >= self.rect_button.y and coordinate_y < self.rect_button.y + self.rect_button.h and self.call_back_menu is not None:
+            self.call_back_menu()
+            print("hey")
+        elif self.call_back is not None:
+            self.call_back()
+
+    def key_down(self, key_code):
+        if self.call_back is not None:
+            self.call_back()
+
 

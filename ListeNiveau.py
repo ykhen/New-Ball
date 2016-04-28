@@ -55,6 +55,8 @@ class ButtonNiveau(Sprite):
         #Action de callBack
         self.action = None
 
+
+
     def update_sprite(self):
         pygame.draw.circle(self.window, self.color, (self.rect.centerx, self.rect.centery), self.rect.height + 5)
         label = self.font.render(self.string, 1, (255, 255, 255))
@@ -62,7 +64,6 @@ class ButtonNiveau(Sprite):
 
 
     def mouse_down_left(self, coordinate_x, coordinate_y):
-        print("Je march sur mes pieds")
         if self.action:
             self.action()
 
